@@ -29,7 +29,7 @@ def register(request):
 				return redirect('login')
 		else:
 			messages.info(request,'The Password Must Be Similar')
-			return redirect(request,'register')
+			return redirect('register')
 	else:
 		return render(request,'user/register.html')
 
