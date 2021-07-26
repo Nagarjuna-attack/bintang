@@ -34,6 +34,21 @@ def register(request):
 		return render(request,'user/register.html')
 
 
+def login(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		password = request.POST['password']
+
+		user = auth.authenticate(username=username,password=password)
+		if user is not None:
+			auth.login(request,user)
+			return redirect('/')
+		else:
+			messages.info(request,'Data tidak valid')
+			return redirect('login')
+	else:
+		return render(request,'user/login.html')
+
 def counter(request):
 	text = request.POST['text']
 	counter_kata = len(text.split())
