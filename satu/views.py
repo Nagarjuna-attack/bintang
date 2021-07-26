@@ -49,7 +49,13 @@ def login(request):
 	else:
 		return render(request,'user/login.html')
 
+def logout(request):
+	auth.logout(request)
+	return redirect('/')
+
 def counter(request):
-	text = request.POST['text']
-	counter_kata = len(text.split())
-	return render(request,'counter.html',{'jum_kata':counter_kata})
+	posts = [1,2,3,4,5,'tim','jhon','kallaco']
+	return render(request,'counter.html',{'posts':posts})
+
+def post(request,pk):
+	return render(request,'user/post.html',{'pk':pk})
