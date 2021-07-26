@@ -5,7 +5,6 @@ def index(request):
 	context = {
 		'nama':'Amigo',
 		'umur':25,
-		'negara':'Spanyollla'
 	}
 
 	return render(request,'index.html',context)
