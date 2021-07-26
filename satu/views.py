@@ -1,35 +1,38 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
 from .models import Fitur
+from django.contrib.auth.models import User, auth
+from django.contrib import messages
 
 # Create your views here.
 def index(request):
-	fiturku = Fitur()
-	fiturku.id=1
-	fiturku.icon='ri-stack-line'
-	fiturku.name='Service'
-	fiturku.detail='Merupakan model yang digunakan untuk mendapatkan kekuatan'
-
-	fiturku2 = Fitur()
-	fiturku2.id=2
-	fiturku2.icon='ri-palette-line'
-	fiturku2.name='Paket'
-	fiturku2.detail='Pesanan yang akan kami antarkan sebentar lagi, akan meluncur'
-
-	fiturku3 = Fitur()
-	fiturku3.id=3
-	fiturku3.icon='ri-command-line'
-	fiturku3.name='Kontak'
-	fiturku3.detail='Anda bisa menghubungi kami dimanapun kalian berada'
-
-	fiturku4 = Fitur()
-	fiturku4.id=4
-	fiturku4.icon='ri-fingerprint-line'
-	fiturku4.name='Tentang'
-	fiturku4.detail='Kami Melayani semua jenis jasa pengiriman kurir'
-
-	fiturs = [fiturku,fiturku2,fiturku3,fiturku4]
-
+	fiturs = Fitur.objects.all()
 	return render(request,'index.html',{'fiturs':fiturs})
+
+#method for register new user
+def register(request):
+	if request.method == 'POST':
+		username = request.POST['username']
+		email = request.POST['email']
+		password = request.POST['password']
+		password2 = request.POST['password2']
+		if password == password2:
+			if User.objects.filter(email=email).exists():
+				messages.info(request,'Email Already Exists')
+				return redirect('register')
+			elif User.objects.filter(username=username).exists():
+				messages.info(request,'Username Already Exists')
+				return redirect('register')
+			else:
+				user = User.objects.create_user(username=username,email=email,password=password)
+				user.save()
+				return redirect('login')
+		else:
+			messages.info(request,'The Password Must Be Similar')
+			return redirect(request,'register')
+	else:
+		return render(request,'user/register.html')
+
 
 def counter(request):
 	text = request.POST['text']
